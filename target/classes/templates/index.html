@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="/pages/images/favicon.ico" /
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de la asignatura de Lógica | ETSIINF</title>
+
+<link href="/pages/css/bootstrap.min.css" rel="stylesheet">
+<link href="/pages/css/datepicker3.css" rel="stylesheet">
+<link href="/pages/css/styles.css" rel="stylesheet">
+
+<!--Icons-->
+<script src="/pages/js/lumino.glyphs.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Lumino</span>Admin</a>
+				<ul class="user-menu">
+					<li class="dropdown pull-right">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> User <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Profile</a></li>
+							<li><a href="#"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Settings</a></li>
+							<li><a href="#"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+							
+		</div><!-- /.container-fluid -->
+	</nav>
+		
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Search">
+			</div>
+		</form>
+		<ul class="nav menu">
+		<li class="active"><a href="/index"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Calculadora de nota</a></li>
+			<li><a href="/estadisticas"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Estadísticas de años anteriores</a></li>
+			<li><a href="/contacto.html"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Contacto</a></li>
+			<li><a href="/links.html"><svg class="glyph stroked pencil"><use xlink:href="#stroked-pencil"></use></svg> Links</a></li>
+			<li><a href="/preguntas.html"><svg class="glyph stroked app-window"><use xlink:href="#stroked-app-window"></use></svg> Preguntas y respuestas de la asignatura</a></li>
+			<li role="presentation" class="divider"></li>
+		</ul>
+
+	</div><!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li class="active">Inicio</li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Ingresa la nota numérica [0-10] obtenida en cada actividad evaluable</h1>
+				<h4 align="center">Dejar un campo vacío equivale a no haberse presentado a esa evaluación.</h3>
+			</div>
+		</div><!--/.row-->
+				
+		<!--ESTA ES LA FILA CON FORMULARIOS PRINCIPALES-->
+		<div class="row">
+			<div class="col-lg-12">
+				<form action="calcularNota" method="post">	
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3" >
+				<div class="panel panel-default">
+					<div class="panel-heading">Bloques temáticos </div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<fieldset>
+											    <label>Bloque de Lógica Proposicional (LP) </label>
+												<div class="form-group">
+												<p class="help-block">Nota individual bloque LP</p>
+												<input id="individual1" name="individual1" type="number" min="0" max="10" step="any" class="form-control">
+											    </div>
+												<br>
+												<div class="form-group">
+												<p class="help-block">Nota de grupo bloque LP</p>
+												<input id="grupal1" name="grupal1" type="number" min="0" max="10" step="any" class="form-control">
+											    </div>
+												
+												
+										
+												<label>Bloque de Lógica de Primer Orden (LPO) </label>		
+												<div class="form-group">
+												<p class="help-block">Nota individual bloque LPO</p>
+												<input id="individual2" name="individual2" type="number" min="0" max="10" step="any" class="form-control">
+											    </div>
+												<br>
+												<div class="form-group">
+												<p class="help-block">Nota de grupo bloque LPO</p>
+												<input id="grupal2" name="grupal2" type="number" min="0" max="10" step="any" class="form-control">
+											    </div>
+												<br>
+												<p>
+														&nbsp;
+														<input id="resetform"
+														name="resetform" type="reset" value="Borrar campos" />
+												</p>
+							</fieldset>
+							
+						</div> <!--/.fin de canvas wrapper-->
+					</div><!--/.fin de panel body-->
+					</div><!--/.fin de panel default-->
+					<div class="panel panel-default">
+					<div class="panel-heading">Exámenes adicionales </div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+						<label>Repesca de evaluación individual <img src="/pages/images/pregunta.png" onClick='acercaRepesca()'/></label>
+								
+								<p class="help-block">Bloque que recuperaste</p>
+		
+									
+										<div class="form-group" >
+									<select id="bloquerepesca" name="bloquerepesca" class="form-control">
+										<option>LP</option>
+										<option>LPO</option>
+									</select>
+								</div>
+								
+											<fieldset>
+												
+												<div class="form-group has-warning">
+												<p class="help-block">Nota obtenida</p>
+												<input id="repesca" name="repesca" type="number" min="0" max="10" step="any" class="form-control" placeholder="nota">
+											    </div>											
+											</fieldset>
+							
+						
+			
+						<label>Examen extraordinario de julio <img src="/pages/images/pregunta.png" onClick='acercaJulio()'/></label>
+									<div class="canvas-wrapper">
+										<fieldset>
+												<div class="form-group">
+												<p class="help-block">Nota del examen de LP</p>
+												<input id="juliolp" name="juliolp" type="number" min="0" max="10" step="any" class="form-control">
+											    </div>
+												
+												<br>
+												
+												<div class="form-group">
+												<p class="help-block">Nota del examen de LPO</p>
+												<input id="juliolpo" name="juliolpo" type="number" min="0" max="10" step="any" class="form-control">
+											    </div>
+												<br>
+												
+											</fieldset>
+										
+						
+						</div>
+						</div><!--/.fin de canvas wrapper-->
+					</div><!--/.fin de panel body-->
+			</div><!-- /.col-->
+		</div><!-- /.row -->
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<!--ESTA ES LA FILA DE LOS DOS BOTONES RIESGO /NOTA FINAL-->
+		<div class="row">
+			<div class="col-lg-12">
+					
+	<div class="col-md-6">
+				<div class="panel panel-teal">
+					<div class="panel-heading dark-overlay">Riesgo de suspender</div>
+					<div class="panel-body">
+						<p>Pinchando aquí puedes conocer la probabilidad de suspender la asignatura en base a las calfificaciones de las actividades que has ingresado; basándose en estádisticas de años anteriores.</p>
+						<input id="calculariesgo" name="calculariesgo" type="submit"
+							value="calcular riesgo"  /> 
+					</div>
+				</div>
+			</div><!--/.col-->
+<!--AQUI VA LA cajita del calculo de nota final-->			
+	<div class="col-md-6">
+				<div class="panel panel-blue">
+					<div class="panel-heading dark-overlay">Calcular nota final</div>
+					<div class="panel-body">
+					<p>Pinchando aquí puedes conocer la nota final de la asignatura.  Los campos no rellenos se considerarán como no presentado.</p>
+						<input id="calcular" name="calcular" type="submit"
+							value="calcular nota"  /> 
+					</div>
+				</div>
+			</div><!--/.col-->
+			</div><!-- /.col-->
+		</div><!-- /.row -->
+		
+	</div><!--/.main-->
+<!--este cierre de form me engloba a todos los formularios existentes den la pagina-->
+	</form>  
+	<script src="/pages/js/jquery-1.11.1.min.js"></script>
+	<script src="/pages/js/bootstrap.min.js"></script>
+	<script src="/pages/js/chart.min.js"></script>
+	<script src="/pages/js/chart-data.js"></script>
+	<script src="/pages/js/easypiechart.js"></script>
+	<script src="/pages/js/easypiechart-data.js"></script>
+	<script src="/pages/js/bootstrap-datepicker.js"></script>
+	<script>
+		!function ($) {
+			$(document).on("click","ul.nav li.parent > a > span.icon", function(){		  
+				$(this).find('em:first').toggleClass("glyphicon-minus");	  
+			}); 
+			$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>	
+	<script>
+function acercaRepesca() {
+    alert("El examen de recuperación de un bloque únicamente sustituye (es decir, lo que saques aquí es la nota que queda)  la nota individual obtenida en el bloque que decidas recuperar. Las nota de trabajo de grupo y las notas del otro bloque no se ven afectadas.");
+}
+</script>
+<script>
+function acercaJulio() {
+    alert("Para la convocatoria de julio, tanto si te presentas al examen del bloque de LP o de LPO, o ambos, la nota de grupo que hubieses obtenido en  esos  bloques no se considera para el cálculo de la nota final.");
+}
+</script>
+</body>
+
+</html>

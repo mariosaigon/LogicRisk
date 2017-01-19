@@ -1,0 +1,175 @@
+---
+title: "TFG"
+author: "JMLL"
+date: "18 de octubre de 2016"
+output: html_document
+---
+
+```
+
+
+{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+
+
+#install.packages("readxl")
+#install.packages('e1071', dependencies=TRUE)
+#install.packages("xlsx")
+#
+#install.packages("Amelia")
+################ FASE 1: LIMPIEZA Y TRANSFORMACION DE DATOS
+##seccion de codigo 1
+library(xlsx)
+datos= read.xlsx("./datos1.xls" , sheetName="ppal")
+##seccion de codigo 2
+table(datos$CLASE)
+pie(table(datos$CLASE)) #obtener gr?fico circular de la distrubucion de clases
+##seccion de codigo 3
+str(datos)
+##seccion de codigo 4
+datos$notalp <- as.numeric(as.character(datos$notalp))
+datos$notalpo <- as.numeric(as.character(datos$notalpo))
+datos$notacurso <- as.numeric(as.character(datos$notacurso))
+str(datos)
+##seccion de codigo 5
+sapply(datos,function(x) sum(is.na(x))) #ver cuantos valores faltantes hay para cada variable
+sapply(datos, function(x) length(unique(x))) #ver cuantos valores unicos hay para cada variable
+##seccion de codigo 6
+library(Amelia)
+missmap(datos, main = "datos faltantes vs observados")
+##seccion de codigo 7
+summary(datos)
+##seccion de codigo 8
+hist(datos$notacurso)
+plot(datos$notacurso, datos$CLASE)
+##seccion de codigo 9
+datos$notacurso[is.na(datos$notacurso)] <- 0  #sustituir NA en notacurso por ceros
+#seccion de codigo 10
+datos$repescalp[((datos$lpindividual>=5) & is.na(datos$repescalp))] <- 10
+datos$repescalpo[((datos$lpoindividual>=5) & is.na(datos$repescalpo))] <- 10
+#seccion de codigo 11
+datos$repescalp[(((datos$lpindividual<5) | is.na(datos$lpindividual)) & is.na(datos$repescalp))] <- 0  
+datos$repescalpo[(((datos$lpoindividual<5) | is.na(datos$lpoindividual)) & is.na(datos$repescalpo))] <- 0 
+#seccion de codigo 12
+datos$lpindividual[is.na(datos$lpindividual)] <- 0  #sustituir NA en lpindividual por ceros
+datos$lpoindividual[is.na(datos$lpoindividual)] <- 0  #sustituir NA en lpoindividual por ceros
+#seccion de codigo 13
+datos$lpgrupo[is.na(datos$lpgrupo)] = 0
+datos$lpogrupo[is.na(datos$lpogrupo)] = 0
+datos$notalp[is.na(datos$notalp)] <- 0  #sustituir NA en nota bloque LP por ceros
+datos$notalpo[is.na(datos$notalpo)] <- 0  #sustituir NA en nota LPO por ceros
+#seccion de codigo 14
+contrasts(datos$CLASE) #saber como trata la variable clase
+
+#@#######          PARTE DE SELECCION DE VARIABLES      ######################
+#seccion de codigo 15
+library(FSelector)
+###### cfs
+subset <- cfs(CLASE~., datos)
+f <- as.simple.formula(subset, "CLASE")
+print(f)
+##############################
+#seccion de codigo 16
+###### information gain
+weights <- information.gain(CLASE~., datos)
+print(weights)
+subset <- cutoff.k(weights, 2)
+f2 <- as.simple.formula(subset, "CLASE")
+print(f2)
+#seccion de codigo 17
+###### gain ratio
+weights2 <- gain.ratio(CLASE~., datos)
+print(weights2)
+subset2 <- cutoff.k(weights2, 2)
+f3 <- as.simple.formula(subset2, "CLASE")
+print(f3)
+
+#@#######          PARTE DE ENTRENAMIENTO DEL MODELO   ######################
+#seccion de codigo 18: particionado simple
+library(caret)
+Train <- createDataPartition(datos$CLASE, p=0.8, list=FALSE)
+training <- datos[ Train, ]
+testing <- datos[ -Train, ]
+mod_fit1 <- train(CLASE ~ .,  data=training, method="glm", family="binomial", maxit = 100)
+coef(mod_fit1$finalModel)
+prediction = predict(mod_fit1, newdata=testing)
+summary(mod_fit1)
+confusionMatrix(prediction, testing$CLASE)
+
+
+#seccion de codigo 19: k fold validation repetida (con todas las variables predictoras)
+ctrl <- trainControl(method = "repeatedcv", number = 10, savePredictions = TRUE, repeats=10)
+mod_fit2 <- train(CLASE ~ .,  data=datos, method="glm", family="binomial",trControl = ctrl, tuneLength = 9, maxit = 100)
+coef(mod_fit2$finalModel)
+print(mod_fit2)
+summary(mod_fit2)
+matrizconf=confusionMatrix(mod_fit2)
+print(matrizconf)
+TP=matrizconf$table[1,"APROBADO"] #true positive: casos predichos como positivos y que s? eran positivos
+TN=matrizconf$table[2,"SUSPENSO"] #true negative: casos predichos como negativos y que s? eran negativos
+FP=matrizconf$table[2,"APROBADO"] #falso positivo: caso predicho como positivo pero era negativo
+FN=matrizconf$table[1,"SUSPENSO"] #falso negativo: caso predicho como negativo pero era positivo
+precision_modelo=(TP/(TP+FP))*100
+recall_modelo=(TP/(TP+FN))*100
+print(recall_modelo)
+print(precision_modelo)
+
+#seccion de codigo 20: k fold validation repetida PERO AHORA SIN LAS VARIABLES DE NOTAS FINAL QUE REEDUCE SEPARACION LINEAL
+ctrl2 <- trainControl(method = "repeatedcv", number = 10, savePredictions = TRUE, repeats=10)
+mod_fit3 <- train(CLASE ~ lpgrupo+lpindividual+repescalp+lpogrupo+lpoindividual+repescalpo,  data=datos, method="glm", family="binomial",trControl = ctrl2, tuneLength = 6, maxit = 100)
+print(mod_fit3)
+summary(mod_fit3)
+matrizconf2=confusionMatrix(mod_fit3)
+print(matrizconf2)
+TP2=matrizconf2$table[1,"APROBADO"] #true positive: casos predichos como positivos y que s? eran positivos
+TN2=matrizconf2$table[2,"SUSPENSO"] #true negative: casos predichos como negativos y que s? eran negativos
+FP2=matrizconf2$table[2,"APROBADO"] #falso positivo: caso predicho como positivo pero era negativo
+FN2=matrizconf2$table[1,"SUSPENSO"] #falso negativo: caso predicho como negativo pero era positivo
+precision_modelo2=(TP2/(TP2+FP2))*100
+recall_modelo2=(TP2/(TP2+FN2))*100
+print(recall_modelo2)
+print(precision_modelo2)
+
+##seccion de codigo 21: otros modelos
+#algoritmo j48 (c4.5)
+library(RWeka) 
+##prueba eliminando las variables no necesarias: notafinal y notas de bloque
+res = J48(CLASE ~lpgrupo+lpindividual+repescalp+lpogrupo+lpoindividual+repescalpo, data = datos)
+summary(res)
+print(res)
+
+################# prediccion de datos
+#debe predecirlo aprobado
+new.sore <- data.frame(lpgrupo=1.5, lpindividual=6.05,repescalp=10,notalp=4.68,lpogrupo=6.3,lpoindividual=6.4,repescalpo=10,notalpo=6.37,notacurso=5.23)
+predict(mod_fit2, new.sore, type="prob")
+#debe predecirlo suspenso
+new.sore2 <- data.frame(lpgrupo=1.33, lpindividual=3.3,repescalp=0,notalp=2.71,lpogrupo=4.1,lpoindividual=2.65,repescalpo=0,notalpo=2.91,notacurso=2.82)
+predict(mod_fit2, new.sore2, type="prob")
+
+mario=summary(datos)
+medialpgrupo=5.135
+medialpindividual=4.828
+mediarepescalp=4.93
+medianotalp=4.847
+medialpogrupo=5.48
+medialpoindividual=4.332
+mediarepescalpo=4.222
+medianotalpo=4.637
+medianotacurso=4.8793
+
+new.sore3 <- data.frame(lpgrupo=10, lpindividual=medialpindividual,repescalp=mediarepescalp,notalp=medianotalp,lpogrupo=medialpogrupo,lpoindividual=medialpoindividual,repescalpo=mediarepescalpo,notalpo=medianotalpo,notacurso=medianotacurso)
+predict(mod_fit2, new.sore3, type="prob")
+```
+
+
+

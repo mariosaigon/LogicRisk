@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lógica-estadísticas de la asignatura</title>
+
+<link href="/pages/css/bootstrap.min.css" rel="stylesheet">
+<link href="/pages/css/datepicker3.css" rel="stylesheet">
+<link href="/pages/css/styles.css" rel="stylesheet">
+
+<!--Icons-->
+<script src="/pages/js/lumino.glyphs.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/index"><span>Lógica</span>calculadora</a>
+				<ul class="user-menu">
+					
+				</ul>
+			</div>
+							
+		</div><!-- /.container-fluid -->
+	</nav>
+		
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Search">
+			</div>
+		</form>
+		<ul class="nav menu">
+		<li class="active"><a href="index.html"><svg class="glyph stroked dashboard-dial"><use xlink:href="#stroked-dashboard-dial"></use></svg> Calculadora de nota</a></li>
+			<li><a href="/estadisticas"><svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg> Estadísticas de años anteriores</a></li>
+			<li><a href="/contacto.html"><svg class="glyph stroked table"><use xlink:href="#stroked-table"></use></svg> Contacto</a></li>
+			<li><a href="/links.html"><svg class="glyph stroked pencil"><use xlink:href="#stroked-pencil"></use></svg> Links</a></li>
+			<li><a href="/preguntas.html"><svg class="glyph stroked app-window"><use xlink:href="#stroked-app-window"></use></svg> Preguntas y respuestas de la asignatura</a></li>
+			<li role="presentation" class="divider"></li>
+		</ul>
+		
+	</div><!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/index"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li class="active">Estadísticas</li>
+			</ol>
+		</div><!--/.row-->
+		
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+    var examenlp = [[${lpindividual}]];
+	var repescalp = [[${repescalp}]];
+    var notalp = [[${notalp}]];	
+	var examenlpo = [[${lpoindividual}]];
+	var repescalpo = [[${repescalpo}]];
+	var notalpo = [[${notalpo}]];
+	var notafinal = [[${notafinal}]];
+	var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
+	
+	var lineChartData = {
+			labels : ["Examen LP","Repesca LP","Nota bloque LP","Examen LPO","Repesca LPO","Nota Bloque LPO","Nota final"],
+			datasets : [
+				{
+					label: "My First dataset",
+					fillColor : "rgba(220,220,220,0.2)",
+					strokeColor : "rgba(220,220,220,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(220,220,220,1)",
+					//notas medias reales
+					data : [482,493,484,433,465,463,485]
+				},
+				{
+					label: "My Second dataset",
+					fillColor : "rgba(48, 164, 255, 0.2)",
+					strokeColor : "rgba(48, 164, 255, 1)",
+					pointColor : "rgba(48, 164, 255, 1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(48, 164, 255, 1)",
+					data : [examenlp,repescalp,notalp,examenlpo,repescalpo,notalpo,notafinal]
+				}
+			]
+
+		}
+		/*]]>*/
+	var barChartData = {
+			labels : ["Examen LP","Repesca LP","Nota bloque LP","Examen LPO","Repesca LPO","Nota Bloque LPO","Nota final"],
+			datasets : [
+				{
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,0.8)",
+					highlightFill: "rgba(220,220,220,0.75)",
+					highlightStroke: "rgba(220,220,220,1)",
+					//notas medias reales
+					data : [482,493,484,433,465,463,485]
+				},
+				{
+					fillColor : "rgba(48, 164, 255, 0.2)",
+					strokeColor : "rgba(48, 164, 255, 0.8)",
+					highlightFill : "rgba(48, 164, 255, 0.75)",
+					highlightStroke : "rgba(48, 164, 255, 1)",
+					data : [examenlp,repescalp,notalp,examenlpo,repescalpo,notalpo,notafinal]
+				}
+			]
+	
+		}
+
+	var pieData = [
+				{
+					value: 300,
+					color:"#30a5ff",
+					highlight: "#62b9fb",
+					label: "Blue"
+				},
+				{
+					value: 50,
+					color: "#ffb53e",
+					highlight: "#fac878",
+					label: "Orange"
+				},
+				{
+					value: 100,
+					color: "#1ebfae",
+					highlight: "#3cdfce",
+					label: "Teal"
+				},
+				{
+					value: 120,
+					color: "#f9243f",
+					highlight: "#f6495f",
+					label: "Red"
+				}
+
+			];
+			
+	var doughnutData = [
+					{
+						value: 300,
+						color:"#30a5ff",
+						highlight: "#62b9fb",
+						label: "Blue"
+					},
+					{
+						value: 50,
+						color: "#ffb53e",
+						highlight: "#fac878",
+						label: "Orange"
+					},
+					{
+						value: 100,
+						color: "#1ebfae",
+						highlight: "#3cdfce",
+						label: "Teal"
+					},
+					{
+						value: 120,
+						color: "#f9243f",
+						highlight: "#f6495f",
+						label: "Red"
+					}
+	
+				];
+
+window.onload = function(){
+	var chart1 = document.getElementById("line-chart").getContext("2d");
+	window.myLine = new Chart(chart1).Line(lineChartData, {
+		responsive: true
+	});
+	var chart2 = document.getElementById("bar-chart").getContext("2d");
+	window.myBar = new Chart(chart2).Bar(barChartData, {
+		responsive : true
+	});
+	var chart3 = document.getElementById("doughnut-chart").getContext("2d");
+	window.myDoughnut = new Chart(chart3).Doughnut(doughnutData, {responsive : true
+	});
+	var chart4 = document.getElementById("pie-chart").getContext("2d");
+	window.myPie = new Chart(chart4).Pie(pieData, {responsive : true
+	});
+	
+};
+		
+		
+		</script>	
+		
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Gráficos</h1>
+				<h3>Comparar tus calificaciones con las medias de años anteriores. En azul tus resultados, y en gris las medias de los tres últimos cursos</h3>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">Gráfico lineal</div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="main-chart" id="line-chart" height="200" width="600"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">Gráfica de barras</div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="main-chart" id="bar-chart" height="200" width="600"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->		
+												
+	</div>	<!--/.main-->
+	  
+
+	<script src="/pages/js/jquery-1.11.1.min.js"></script>
+	<script src="/pages/js/bootstrap.min.js"></script>
+	<script src="/pages/js/chart.min.js"></script>
+	<!--script src="/pages/js/chart-data.js"></script>-->
+	<script src="/pages/js/easypiechart.js"></script>
+	<script src="/pages/js/easypiechart-data.js"></script>
+	<script src="/pages/js/bootstrap-datepicker.js"></script>
+	<script>
+		!function ($) {
+		    $(document).on("click","ul.nav li.parent > a > span.icon", function(){          
+		        $(this).find('em:first').toggleClass("glyphicon-minus");      
+		    }); 
+		    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		}(window.jQuery);
+
+		$(window).on('resize', function () {
+		  if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		})
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		})
+	</script>	
+</body>
+
+</html>

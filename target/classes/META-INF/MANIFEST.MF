@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: jdbc
+Implementation-Version: 1.0.0
+Built-By: jmlop
+Implementation-Vendor-Id: io.github.web
+Build-Jdk: 1.8.0_101
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+Main-Class: io.github.web.data.mysql.SpringMvcHelloWorldApp
+
